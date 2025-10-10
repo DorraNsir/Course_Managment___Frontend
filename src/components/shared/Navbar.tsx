@@ -24,7 +24,7 @@ export const Navbar = ({ role }: NavbarProps) => {
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-semibold text-lg">
           <BookOpen className="h-6 w-6 text-primary" />
-          <span className="hidden sm:inline">UniCourse</span>
+          <span className="hidden sm:inline">ITBSCourse</span>
         </Link>
 
         {role && (

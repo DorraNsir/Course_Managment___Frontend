@@ -45,7 +45,7 @@ const Login = () => {
           <div className="flex justify-center mb-4">
             <BookOpen className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold">UniCourse</h1>
+          <h1 className="text-2xl font-bold">ITBSCourse</h1>
         </div>
 
         <Card>

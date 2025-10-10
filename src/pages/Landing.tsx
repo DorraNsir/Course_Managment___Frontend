@@ -26,7 +26,7 @@ const Landing = () => {
             </motion.div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            UniCourse
+            ITBSCourse
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Plateforme moderne de gestion des cours universitaires
