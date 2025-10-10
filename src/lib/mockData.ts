@@ -1,0 +1,110 @@
+export interface Group {
+  id: string;
+  name: string;
+  studentCount: number;
+  courseCount: number;
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  subject: string;
+  teacher: string;
+  groupId: string;
+  hasSubmission: boolean;
+  fileUrl?: string;
+  createdAt: string;
+}
+
+export const mockGroups: Group[] = [
+  {
+    id: "1",
+    name: "Groupe A - Licence 3 Informatique",
+    studentCount: 32,
+    courseCount: 8,
+  },
+  {
+    id: "2",
+    name: "Groupe B - Master 1 Réseaux",
+    studentCount: 28,
+    courseCount: 6,
+  },
+  {
+    id: "3",
+    name: "Groupe C - Licence 2 Math-Info",
+    studentCount: 35,
+    courseCount: 7,
+  },
+];
+
+export const mockCourses: Course[] = [
+  {
+    id: "1",
+    title: "Introduction aux Bases de Données",
+    description: "Concepts fondamentaux des systèmes de gestion de bases de données relationnelles, SQL et normalisation.",
+    subject: "Informatique",
+    teacher: "Dr. Martin Dubois",
+    groupId: "1",
+    hasSubmission: true,
+    createdAt: "2025-01-15",
+  },
+  {
+    id: "2",
+    title: "Algorithmique Avancée",
+    description: "Étude des algorithmes de tri, recherche, graphes et complexité algorithmique.",
+    subject: "Informatique",
+    teacher: "Dr. Martin Dubois",
+    groupId: "1",
+    hasSubmission: true,
+    createdAt: "2025-01-20",
+  },
+  {
+    id: "3",
+    title: "Mathématiques Discrètes",
+    description: "Logique, ensembles, relations, graphes et théorie des nombres.",
+    subject: "Mathématiques",
+    teacher: "Prof. Sophie Laurent",
+    groupId: "1",
+    hasSubmission: false,
+    createdAt: "2025-01-18",
+  },
+  {
+    id: "4",
+    title: "Réseaux TCP/IP",
+    description: "Architecture des réseaux, protocoles TCP/IP, routage et adressage.",
+    subject: "Réseaux",
+    teacher: "Dr. Martin Dubois",
+    groupId: "2",
+    hasSubmission: true,
+    createdAt: "2025-01-22",
+  },
+  {
+    id: "5",
+    title: "Sécurité des Réseaux",
+    description: "Cryptographie, pare-feu, VPN et détection d'intrusions.",
+    subject: "Réseaux",
+    teacher: "Dr. Martin Dubois",
+    groupId: "2",
+    hasSubmission: true,
+    createdAt: "2025-01-25",
+  },
+  {
+    id: "6",
+    title: "Programmation Orientée Objet",
+    description: "Concepts POO avec Java : classes, héritage, polymorphisme et interfaces.",
+    subject: "Informatique",
+    teacher: "Prof. Claire Martin",
+    groupId: "3",
+    hasSubmission: true,
+    createdAt: "2025-01-19",
+  },
+];
+
+export const subjects = [
+  "Informatique",
+  "Mathématiques",
+  "Réseaux",
+  "Systèmes",
+  "Programmation",
+];
