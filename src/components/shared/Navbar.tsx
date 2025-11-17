@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 interface NavbarProps {
-  role?: "teacher" | "student";
+  role?: "teacher" | "student" | "admin";
 }
 
 export const Navbar = ({ role }: NavbarProps) => {
@@ -31,7 +31,9 @@ export const Navbar = ({ role }: NavbarProps) => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <User className="h-4 w-4" />
-              <span className="hidden sm:inline capitalize">{role}</span>
+              <span className="hidden sm:inline capitalize">
+                {role === "admin" ? "Administrateur" : role === "teacher" ? "Enseignant" : "Étudiant"}
+              </span>
             </div>
             <Button
               variant="ghost"
