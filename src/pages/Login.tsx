@@ -35,7 +35,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex items-center justify-center p-4">
+    <div className="relative  min-h-screen overflow-hidden  flex items-center justify-center p-4">
+    
+    <img
+      src="/bg-waves.svg"
+      alt="wave background"
+      className="absolute bottom-0 left-0 w-full pointer-events-none select-none -z-10"
+    />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
