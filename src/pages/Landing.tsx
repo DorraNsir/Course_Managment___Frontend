@@ -33,7 +33,7 @@ const Landing = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -91,6 +91,38 @@ const Landing = () => {
                     variant="secondary"
                   >
                     Connexion Étudiant
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Card className="hover:shadow-xl transition-all hover:-translate-y-1">
+              <CardContent className="pt-6">
+                <div className="text-center space-y-6">
+                  <div className="flex justify-center">
+                    <div className="p-4 rounded-full bg-secondary/10">
+                      <Users className="h-12 w-12 text-secondary" />
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold mb-2">Administrateur</h2>
+                    <p className="text-muted-foreground mb-6">
+                      Gérez les utilisateurs, groupes et affectations
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => navigate("/login?role=admin")}
+                    className="w-full"
+                    size="lg"
+                    variant="outline"
+                  >
+                    Connexion Admin
                   </Button>
                 </div>
               </CardContent>

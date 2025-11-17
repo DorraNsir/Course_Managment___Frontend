@@ -11,11 +11,11 @@ import { toast } from "sonner";
 const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const preselectedRole = searchParams.get("role") as "teacher" | "student" | null;
+  const preselectedRole = searchParams.get("role") as "teacher" | "student" | "admin" | null;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"teacher" | "student">(preselectedRole || "student");
+  const [role, setRole] = useState<"teacher" | "student" | "admin">(preselectedRole || "student");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +29,8 @@ const Login = () => {
     
     if (role === "teacher") {
       navigate("/teacher/dashboard");
+    } else if (role === "admin") {
+      navigate("/admin/dashboard");
     } else {
       navigate("/student/dashboard");
     }
@@ -52,14 +54,14 @@ const Login = () => {
           <CardHeader>
             <CardTitle>Connexion</CardTitle>
             <CardDescription>
-              Connectez-vous à votre espace {role === "teacher" ? "enseignant" : "étudiant"}
+              Connectez-vous à votre espace {role === "teacher" ? "enseignant" : role === "admin" ? "administrateur" : "étudiant"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label>Rôle</Label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Button
                     type="button"
                     variant={role === "student" ? "default" : "outline"}
@@ -75,6 +77,14 @@ const Login = () => {
                     className="w-full"
                   >
                     Enseignant
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={role === "admin" ? "default" : "outline"}
+                    onClick={() => setRole("admin")}
+                    className="w-full"
+                  >
+                    Admin
                   </Button>
                 </div>
               </div>

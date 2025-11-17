@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 interface NavbarProps {
-  role?: "teacher" | "student";
+  role?: "teacher" | "student" | "admin";
 }
 
 export const Navbar = ({ role }: NavbarProps) => {
