@@ -108,3 +108,63 @@ export const subjects = [
   "Systèmes",
   "Programmation",
 ];
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: "teacher" | "student";
+  groupIds: string[];
+}
+
+export const mockUsers: User[] = [
+  {
+    id: "t1",
+    name: "Prof. Ahmed Benali",
+    email: "ahmed.benali@itbs.edu",
+    role: "teacher",
+    groupIds: ["1", "2"],
+  },
+  {
+    id: "t2",
+    name: "Prof. Fatima Zahra",
+    email: "fatima.zahra@itbs.edu",
+    role: "teacher",
+    groupIds: ["3"],
+  },
+  {
+    id: "s1",
+    name: "Youssef Alami",
+    email: "youssef.alami@student.itbs.edu",
+    role: "student",
+    groupIds: ["1"],
+  },
+  {
+    id: "s2",
+    name: "Salma Bennis",
+    email: "salma.bennis@student.itbs.edu",
+    role: "student",
+    groupIds: ["1"],
+  },
+  {
+    id: "s3",
+    name: "Mehdi Tazi",
+    email: "mehdi.tazi@student.itbs.edu",
+    role: "student",
+    groupIds: ["2"],
+  },
+  {
+    id: "s4",
+    name: "Amina El Fassi",
+    email: "amina.elfassi@student.itbs.edu",
+    role: "student",
+    groupIds: ["2"],
+  },
+  {
+    id: "s5",
+    name: "Omar Idrissi",
+    email: "omar.idrissi@student.itbs.edu",
+    role: "student",
+    groupIds: ["3"],
+  },
+];
