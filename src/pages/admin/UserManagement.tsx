@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { Navbar } from "@/components/shared/Navbar";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,25 +11,34 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UserPlus, Edit, Trash2, Search } from "lucide-react";
 import { motion } from "framer-motion";
-import { mockUsers, User } from "@/lib/mockData";
 import { toast } from "sonner";
+import { useUsers } from "../../hooks/users/useUsers";
+import { api } from "../../api/axiosInstance";
+import { useGroups } from "@/hooks/groups/useGroups";
+import { CreateUserDialog } from "@/components/shared/userMangment/CreateUserDialog";
+import { UpdateUserDialog } from "@/components/shared/userMangment/UpdateUserDialog";
+import { useDeleteUser } from "@/hooks/users/useDeleteUser";
 
 const UserManagement = () => {
-  const [users, setUsers] = useState<User[]>(mockUsers);
+  
+  const { data: users, isLoading } = useUsers();
+  const { data: groups, isLoading:Load } = useGroups();
+  const deleteUser=useDeleteUser()
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterRole, setFilterRole] = useState<"all" | "teacher" | "student">("all");
-
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = filterRole === "all" || user.role === filterRole;
+  const [filterRole, setFilterRole] = useState< "all"|"teacher" | "student">("all");
+  const filteredUsers = (users ?? []).filter(user => {
+  const matchesSearch =
+    user.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole =filterRole === "all" || user.role === filterRole;
     return matchesSearch && matchesRole;
-  });
+    });
 
-  const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter(u => u.id !== userId));
-    toast.success("Utilisateur supprimé avec succès");
+  const handleDeleteUser = async (userId: number) => {
+    await deleteUser.mutateAsync(userId);
+    toast.success("Utilisateur supprimé avec succès !");
   };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -55,44 +64,7 @@ const UserManagement = () => {
           <CardHeader>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <CardTitle>Liste des Utilisateurs</CardTitle>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Ajouter Utilisateur
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Ajouter un Utilisateur</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 pt-4">
-                    <div>
-                      <Label htmlFor="name">Nom Complet</Label>
-                      <Input id="name" placeholder="John Doe" />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="john@example.com" />
-                    </div>
-                    <div>
-                      <Label htmlFor="role">Rôle</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionner un rôle" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="teacher">Enseignant</SelectItem>
-                          <SelectItem value="student">Étudiant</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button className="w-full" onClick={() => toast.success("Utilisateur ajouté")}>
-                      Enregistrer
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <CreateUserDialog groups={groups || []} />
             </div>
           </CardHeader>
           <CardContent>
@@ -126,13 +98,14 @@ const UserManagement = () => {
                     <TableHead>Email</TableHead>
                     <TableHead>Rôle</TableHead>
                     <TableHead>Groupes</TableHead>
+                    <TableHead>Mot de Passe</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredUsers.map((user) => (
                     <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
+                      <TableCell className="font-medium">{user.fullName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
                         <Badge variant={user.role === "teacher" ? "default" : "secondary"}>
@@ -141,14 +114,13 @@ const UserManagement = () => {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
-                          {user.groupIds.length} groupe(s)
+                          {user.groupId? groups?.find(g=>g.id===user.groupId)?.name : "Aucun"}
                         </span>
                       </TableCell>
+                      <TableCell>*************</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
-                          </Button>
+                          <UpdateUserDialog groups={groups || []} user={users.find(u=>u.id===user.id)}/>
                           <Button 
                             variant="ghost" 
                             size="icon"

@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { mockGroups, mockCourses, mockUsers } from "@/lib/mockData";
 
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  
 
   const stats = [
     {
       title: "Total Utilisateurs",
-      value: mockUsers.length,
+      value: mockUsers.length,  
       icon: Users,
       description: `${mockUsers.filter(u => u.role === "teacher").length} enseignants, ${mockUsers.filter(u => u.role === "student").length} étudiants`,
       color: "text-blue-600",

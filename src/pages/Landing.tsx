@@ -66,7 +66,7 @@ const Landing = () => {
                   </div>
 
                   <Button
-                    onClick={() => navigate("/login?role=student")}
+                    onClick={() => navigate("/login")}
                     className="w-full"
                     size="lg"
                     variant="secondary"
