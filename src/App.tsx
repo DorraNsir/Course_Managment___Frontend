@@ -13,6 +13,7 @@ import CourseDetail from "./pages/student/CourseDetail";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserManagement from "./pages/admin/UserManagement";
 import GroupManagement from "./pages/admin/GroupManagement";
+import GroupDetails from "./pages/admin/GroupDetails";
 import AssignGroups from "./pages/admin/AssignGroups";
 import NotFound from "./pages/NotFound";
 import MatiereManagement from "./pages/admin/MatiereManagment";
@@ -35,6 +36,7 @@ const App = () => (
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/groups" element={<GroupManagement />} />
+        <Route path="/admin/groups/:id" element={<GroupDetails />} />
         <Route path="/admin/matieres" element={<MatiereManagement />} />
         <Route path="/admin/assign" element={<AssignGroups />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

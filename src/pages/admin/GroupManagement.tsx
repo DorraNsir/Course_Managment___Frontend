@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {Trash2, Users, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { useGroups } from "@/hooks/groups/useGroups";
 import { CreateGroupDialog } from "@/components/groupManagment/createGroupDialog";
 import { UpdateGroupDialog } from "@/components/groupManagment/UpdateGroupDialog";
@@ -15,6 +16,7 @@ import { useAssignments } from "@/hooks/assignments/useAssignments";
 
 
 const GroupManagement = () => {
+  const navigate = useNavigate();
   const { data: groups, isLoading:Load } = useGroups();
   const{data:users}=useUsers();
   const{data:assignments}=useAssignments()
@@ -87,7 +89,11 @@ const GroupManagement = () => {
                       <BookOpen className="h-4 w-4" />
                       <span className="text-sm">{assignments.filter(u => u.groupId === group.id).length} matieres</span>
                     </div>
-                    <Button variant="outline" className="w-full mt-4">
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-4"
+                      onClick={() => navigate(`/admin/groups/${group.id}`)}
+                    >
                       Voir Détails
                     </Button>
                   </div>
