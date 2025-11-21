@@ -15,6 +15,7 @@ import UserManagement from "./pages/admin/UserManagement";
 import GroupManagement from "./pages/admin/GroupManagement";
 import AssignGroups from "./pages/admin/AssignGroups";
 import NotFound from "./pages/NotFound";
+import MatiereManagement from "./pages/admin/MatiereManagment";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/admin/groups" element={<GroupManagement />} />
+        <Route path="/admin/matieres" element={<MatiereManagement />} />
         <Route path="/admin/assign" element={<AssignGroups />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />

@@ -1,7 +1,7 @@
 import { api } from "./axiosInstance";
 
 export const assignmentsApi = {
-  getAll: () => api.get("/assignments").then(r => r.data),
-  assign: (data) => api.post("/assignments", data).then(r => r.data),
-  delete: (id) => api.delete(`/assignments/${id}`).then(r => r.data),
+  getAll: () => api.get("/TeacherMatiereGroup").then(r => r.data),
+  assign: (data) => api.post("/TeacherMatiereGroup", data).then(r => r.data),
+  delete: (id) => api.delete(`/TeacherMatiereGroup/${id}`).then(r => r.data),
 };

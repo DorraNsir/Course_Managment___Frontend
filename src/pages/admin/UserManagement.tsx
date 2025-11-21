@@ -1,4 +1,4 @@
-import { useState ,useEffect} from "react";
+import { useState } from "react";
 import { Navbar } from "@/components/shared/Navbar";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,17 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserPlus, Edit, Trash2, Search } from "lucide-react";
+import { Trash2, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useUsers } from "../../hooks/users/useUsers";
-import { api } from "../../api/axiosInstance";
 import { useGroups } from "@/hooks/groups/useGroups";
-import { CreateUserDialog } from "@/components/shared/userMangment/CreateUserDialog";
-import { UpdateUserDialog } from "@/components/shared/userMangment/UpdateUserDialog";
+import { CreateUserDialog } from "@/components/userMangment/CreateUserDialog";
+import { UpdateUserDialog } from "@/components/userMangment/UpdateUserDialog";
 import { useDeleteUser } from "@/hooks/users/useDeleteUser";
 
 const UserManagement = () => {

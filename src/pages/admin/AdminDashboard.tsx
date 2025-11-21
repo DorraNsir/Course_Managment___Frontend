@@ -5,30 +5,38 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { mockGroups, mockCourses, mockUsers } from "@/lib/mockData";
+import { useUsers } from "@/hooks/users/useUsers";
+import { useGroups } from "@/hooks/groups/useGroups";
+import { useMatieres } from "@/hooks/matieres/useMatires";
+
 
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const{data:users}=useUsers()
+  const{data:groups}=useGroups()
+  const{data:matieres}=useMatieres()
+  
   
 
   const stats = [
     {
       title: "Total Utilisateurs",
-      value: mockUsers.length,  
+      value: users?.length,  
       icon: Users,
-      description: `${mockUsers.filter(u => u.role === "teacher").length} enseignants, ${mockUsers.filter(u => u.role === "student").length} étudiants`,
+      description: `${users?.filter(u => u.role === "teacher").length} enseignants, ${users?.filter(u => u.role === "student").length} étudiants`,
       color: "text-blue-600",
     },
     {
       title: "Groupes",
-      value: mockGroups.length,
+      value: groups?.length,
       icon: GraduationCap,
       description: "Groupes actifs",
       color: "text-green-600",
     },
     {
-      title: "Cours",
-      value: mockCourses.length,
+      title: "Matieres",
+      value: matieres?.length,
       icon: BookOpen,
       description: "Total des cours",
       color: "text-purple-600",
@@ -78,7 +86,7 @@ const AdminDashboard = () => {
           transition={{ delay: 0.3 }}
         >
           <h2 className="text-2xl font-semibold mb-4">Actions Rapides</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/users")}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -101,6 +109,20 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-4">Créer et gérer les groupes</p>
+                <Button variant="outline" className="w-full">Accéder</Button>
+              </CardContent>
+
+            </Card>
+
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate("/admin/matieres")}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GraduationCap className="h-5 w-5" />
+                  Matieres
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground mb-4">Créer et gérer les matieres</p>
                 <Button variant="outline" className="w-full">Accéder</Button>
               </CardContent>
             </Card>

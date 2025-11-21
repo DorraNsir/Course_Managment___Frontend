@@ -18,32 +18,37 @@ import {
 
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
-import { useCreateUser } from "../../../hooks/users/useCreateUser";
-import { useEffect, useState } from "react";
-export function CreateUserDialog({ groups }) {
+import { useState } from "react";
+import { Edit } from "lucide-react";
+import { useUpdateUser } from "@/hooks/users/useUpdateUser";
+export function UpdateUserDialog({ groups,user }) {
 
-  const createUser = useCreateUser();
-  const [role, setRole] = useState("");
+  const updateUser = useUpdateUser();
+  const [role, setRole] = useState(user.role || "");
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
-      fullName: "",
-      email: "",
-      role: "",
-      groupId: "",
-      password: "", 
+      fullName: user.fullName || "",
+      email: user.email || "",
+      role: user.role || "",
+      groupId: user.groupId ? String(user.groupId) : "",
+      password:"", 
     },
     
     onSubmit: async ({ value }) => {
-      await createUser.mutateAsync({
+      await updateUser.mutateAsync({
+        id:user.id,
+        data:{
         fullName: value.fullName,
         email: value.email,
         role: value.role,
         groupId: value.role === "student" ? Number(value.groupId) : null,
-        password: value.password,
-      });
+        password:value.password,
+      }
+    });
+    console.log("User updated:", value);
 
-      toast.success("Utilisateur ajouté !");
+      toast.success("Utilisateur modifié !");
       form.reset();     // reset form
       setOpen(false);   // CLOSE DIALOG
     }, 
@@ -54,12 +59,14 @@ export function CreateUserDialog({ groups }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Ajouter Utilisateur</Button>
+        <Button variant="ghost" size="icon">
+            <Edit className="h-4 w-4" />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un utilisateur</DialogTitle>
+          <DialogTitle>Modifier utilisateur</DialogTitle>
         </DialogHeader>
 
         <form
@@ -172,9 +179,9 @@ export function CreateUserDialog({ groups }) {
           <Button
             type="submit"
             className="w-full"
-            disabled={createUser.isPending}
+            disabled={updateUser.isPending}
           >
-            {createUser.isPending ? "Enregistrement..." : "Enregistrer"}
+            {updateUser.isPending ? "Enregistrement..." : "Enregistrer"}
           </Button>
         </form>
       </DialogContent>

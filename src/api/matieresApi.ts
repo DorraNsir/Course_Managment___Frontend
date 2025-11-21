@@ -1,8 +1,8 @@
 import { api } from "./axiosInstance";
 
 export const matieresApi = {
-  getAll: () => api.get("/matieres").then(r => r.data),
-  create: (data) => api.post("/matieres", data).then(r => r.data),
-  update: (id, data) => api.put(`/matieres/${id}`, data).then(r => r.data),
-  delete: (id) => api.delete(`/matieres/${id}`).then(r => r.data),
+  getAll: () => api.get("/matiere").then(r => r.data),
+  create: (data) => api.post("/matiere", data).then(r => r.data),
+  update: (id, data) => api.patch(`/matiere/${id}`, data).then(r => r.data),
+  delete: (id) => api.delete(`/matiere/${id}`).then(r => r.data),
 };

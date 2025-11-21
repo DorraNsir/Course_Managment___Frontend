@@ -18,35 +18,30 @@ import {
 
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { useCreateUser } from "../../hooks/users/useCreateUser";
 import { useState } from "react";
-import { Edit } from "lucide-react";
-import { useUpdateUser } from "@/hooks/users/useUpdateUser";
-export function UpdateUserDialog({ groups,user }) {
+export function CreateUserDialog({ groups }) {
 
-  const updateUser = useUpdateUser();
-  const [role, setRole] = useState(user.role || "");
+  const createUser = useCreateUser();
+  const [role, setRole] = useState("");
   const [open, setOpen] = useState(false);
   const form = useForm({
     defaultValues: {
-      fullName: user.fullName || "",
-      email: user.email || "",
-      role: user.role || "",
-      groupId: user.groupId ? String(user.groupId) : "",
-      password:"", 
+      fullName: "",
+      email: "",
+      role: "",
+      groupId: "",
+      password: "", 
     },
     
     onSubmit: async ({ value }) => {
-      await updateUser.mutateAsync({
-        id:user.id,
-        data:{
+      await createUser.mutateAsync({
         fullName: value.fullName,
         email: value.email,
         role: value.role,
         groupId: value.role === "student" ? Number(value.groupId) : null,
-        password:value.password,
-      }
-    });
-    console.log("User updated:", value);
+        password: value.password,
+      });
 
       toast.success("Utilisateur ajouté !");
       form.reset();     // reset form
@@ -59,9 +54,7 @@ export function UpdateUserDialog({ groups,user }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-            <Edit className="h-4 w-4" />
-        </Button>
+        <Button>Ajouter Utilisateur</Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -179,9 +172,9 @@ export function UpdateUserDialog({ groups,user }) {
           <Button
             type="submit"
             className="w-full"
-            disabled={updateUser.isPending}
+            disabled={createUser.isPending}
           >
-            {updateUser.isPending ? "Enregistrement..." : "Enregistrer"}
+            {createUser.isPending ? "Enregistrement..." : "Enregistrer"}
           </Button>
         </form>
       </DialogContent>
