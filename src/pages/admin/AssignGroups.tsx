@@ -24,13 +24,14 @@ const AssignGroups = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedMatiere, setSelectedMatiere] = useState("");
+const handleAssign = async () => {
+  // Validate required fields
+  if (!selectedUser || !selectedGroup || !selectedMatiere) {
+    toast.error("Veuillez sélectionner un utilisateur, une matière et un groupe.");
+    return;
+  }
 
-  const handleAssign = async () => {
-    if (!selectedUser || !selectedGroup || !selectedMatiere) {
-      toast.error("Veuillez sélectionner un utilisateur, une matière et un groupe");
-      return;
-    }
-
+  try {
     await createAssignment.mutateAsync({
       teacherId: Number(selectedUser),
       matiereId: Number(selectedMatiere),
@@ -39,10 +40,29 @@ const AssignGroups = () => {
 
     toast.success("Affectation effectuée avec succès");
 
+    // Reset
     setSelectedUser("");
     setSelectedGroup("");
     setSelectedMatiere("");
-  };
+
+  } catch (error: any) {
+    console.error(error);
+
+    // If backend returned a message
+    if (error?.response?.data) {
+      toast.error(error.response.data);
+    } 
+    // If Axios error has message
+    else if (error?.message) {
+      toast.error(`Erreur : ${error.message}`);
+    } 
+    // Fallback generic error
+    else {
+      toast.error("Une erreur est survenue lors de l'affectation.");
+    }
+  }
+};
+
 
     const groupedAssignments = assignments?.reduce((acc, a) => {
     if (!acc[a.teacherId]) {

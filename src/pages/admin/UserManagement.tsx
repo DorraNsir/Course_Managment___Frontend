@@ -15,11 +15,13 @@ import { useGroups } from "@/hooks/groups/useGroups";
 import { CreateUserDialog } from "@/components/userMangment/CreateUserDialog";
 import { UpdateUserDialog } from "@/components/userMangment/UpdateUserDialog";
 import { useDeleteUser } from "@/hooks/users/useDeleteUser";
+import { useAssignments } from "@/hooks/assignments/useAssignments";
 
 const UserManagement = () => {
   
   const { data: users, isLoading } = useUsers();
   const { data: groups, isLoading:Load } = useGroups();
+  const{data:assignments}=useAssignments()
   const deleteUser=useDeleteUser()
   const [searchQuery, setSearchQuery] = useState("");
   const [filterRole, setFilterRole] = useState< "all"|"teacher" | "student">("all");
@@ -111,7 +113,21 @@ const UserManagement = () => {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
-                          {user.groupId? groups?.find(g=>g.id===user.groupId)?.name : "Aucun"}
+                          {user.role === "student" ? (
+                            groups?.find(g => g.id === user.groupId)?.name
+                          ) : (
+                            (() => {
+                              const uniqueGroupLetters = [
+                                ...new Set(
+                                  assignments
+                                    .filter(a => a.teacherId === user.id)
+                                    .map(a => a.groupName.split(" ").pop()) // Extract last word (A,B,C...)
+                                ),
+                              ];
+
+                              return `Groupes (${uniqueGroupLetters.join(", ")})`;
+                            })()
+                          )}
                         </span>
                       </TableCell>
                       <TableCell>*************</TableCell>
