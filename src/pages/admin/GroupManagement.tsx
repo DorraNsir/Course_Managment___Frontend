@@ -21,6 +21,7 @@ const GroupManagement = () => {
   const{data:users}=useUsers();
   const{data:assignments}=useAssignments()
   const deleteGroup=useDeleteGroup()
+  
   const handleDeleteGroup = async (groupId: string) => {
     await deleteGroup.mutateAsync(groupId);
     toast.success("Groupe supprimé avec succès");
@@ -29,7 +30,7 @@ const GroupManagement = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="admin" />
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb
           items={[
@@ -67,7 +68,7 @@ const GroupManagement = () => {
                     <span>{group.name}_{group.description}</span>
                     
                     <div className="flex gap-1">
-                      <UpdateGroupDialog group={groups.find(g=>g.id===group.id)}/>
+                      <UpdateGroupDialog group={groups?.find(g=>g.id===group.id)}/>
                       <Button 
                         variant="ghost" 
                         size="icon" 
@@ -83,11 +84,11 @@ const GroupManagement = () => {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      <span className="text-sm">{users.filter(u => u.groupId === group.id).length} étudiants</span>
+                      <span className="text-sm">{users?.filter(u => u.groupId === group.id).length} étudiants</span>
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <BookOpen className="h-4 w-4" />
-                      <span className="text-sm">{assignments.filter(u => u.groupId === group.id).length} matieres</span>
+                      <span className="text-sm">{assignments?.filter(u => u.groupId === group.id).length} matieres</span>
                     </div>
                     <Button 
                       variant="outline" 

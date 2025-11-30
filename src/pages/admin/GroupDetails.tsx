@@ -3,7 +3,7 @@ import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, GraduationCap, Mail, Search } from "lucide-react";
+import { Users, BookOpen, GraduationCap, Mail, Search, CloudCog } from "lucide-react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useGroups } from "@/hooks/groups/useGroups";
@@ -14,15 +14,17 @@ import { useState } from "react";
 
 const GroupDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const numericId = Number(id);
   const { data: groups } = useGroups();
   const { data: users } = useUsers();
   const { data: assignments } = useAssignments();
   const { data: matieres } = useMatieres();
   const [studentSearch, setStudentSearch] = useState("");
 
-  const group = groups?.find(g => g.id === id);
-  const students = users?.filter(u => u.groupId === id && u.role === "student") || [];
-  const groupAssignments = assignments?.filter(a => a.groupId === id) || [];
+  const group = groups?.find(g => g.id === numericId);
+  const students = users?.filter(u => u.groupId === numericId && u.role === "student") || [];
+  console.log(students)
+  const groupAssignments = assignments?.filter(a => a.groupId === numericId) || [];
   
   // Get unique teachers and their matieres
   const teachersMap = new Map();
@@ -47,14 +49,14 @@ const GroupDetails = () => {
   ) || [];
 
   const filteredStudents = students.filter(s => 
-    s.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+    s.fullName.toLowerCase().includes(studentSearch.toLowerCase()) ||
     s.email.toLowerCase().includes(studentSearch.toLowerCase())
   );
 
   if (!group) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar role="admin" />
+        <Navbar />
         <div className="container mx-auto px-4 py-8">
           <p className="text-center text-muted-foreground">Groupe non trouvé</p>
         </div>
@@ -64,12 +66,12 @@ const GroupDetails = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="admin" />
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb
           items={[
             { label: "Admin", href: "/admin/dashboard" },
-            { label: "Groupes", href: "/admin/groups" },
+            { label: "Gestion des Groupes", href: "/admin/groups" },
             { label: group.name },
           ]}
         />
@@ -162,7 +164,7 @@ const GroupDetails = () => {
                       Aucun étudiant
                     </p>
                   ) : (
-                    filteredStudents.map((student, index) => (
+                    filteredStudents?.map((student, index) => (
                       <motion.div
                         key={student.id}
                         initial={{ opacity: 0, y: 10 }}
@@ -170,7 +172,7 @@ const GroupDetails = () => {
                         transition={{ delay: index * 0.05 }}
                         className="p-4 rounded-lg border bg-card hover:shadow-md transition-shadow"
                       >
-                        <p className="font-semibold">{student.name}</p>
+                        <p className="font-semibold">{student.fullName}</p>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
                           <Mail className="h-3 w-3" />
                           {student.email}
@@ -212,7 +214,7 @@ const GroupDetails = () => {
                         className="p-4 rounded-lg border bg-card hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between mb-2">
-                          <p className="font-semibold">{teacher.name}</p>
+                          <p className="font-semibold">{teacher.fullName}</p>
                           <Badge variant="secondary">Enseignant</Badge>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">

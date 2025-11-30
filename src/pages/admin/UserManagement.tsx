@@ -41,7 +41,7 @@ const UserManagement = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="admin" />
+      <Navbar/>
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb
           items={[
@@ -102,7 +102,7 @@ const UserManagement = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredUsers.map((user) => (
+                  {filteredUsers?.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.fullName}</TableCell>
                       <TableCell>{user.email}</TableCell>
@@ -113,21 +113,22 @@ const UserManagement = () => {
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
-                          {user.role === "student" ? (
-                            groups?.find(g => g.id === user.groupId)?.name
-                          ) : (
-                            (() => {
-                              const uniqueGroupLetters = [
-                                ...new Set(
-                                  assignments
-                                    .filter(a => a.teacherId === user.id)
-                                    .map(a => a.groupName.split(" ").pop()) // Extract last word (A,B,C...)
-                                ),
-                              ];
+                          {
+                            user.role === "student"
+                              ? groups?.find(g => g.id === user.groupId)?.name || "Aucun"
+                              : (() => {
+                                    const teacherGroups = (assignments || [])
+                                      .filter(a => a.teacherId === user.id)
+                                    .map(a => a.groupName.split(" ").pop());
 
-                              return `Groupes (${uniqueGroupLetters.join(", ")})`;
-                            })()
-                          )}
+                                  const uniqueLetters = [...new Set(teacherGroups)];
+
+                                  return uniqueLetters.length > 0
+                                    ? `Groupes (${uniqueLetters.join(", ")})`
+                                    : "Aucun";
+                                })()
+                          }
+
                         </span>
                       </TableCell>
                       <TableCell>*************</TableCell>

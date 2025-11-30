@@ -18,6 +18,7 @@ export function CreateGroupDialog() {
 
   const createGroup = useCreateGroup();
   const [open, setOpen] = useState(false);
+
   const form = useForm({
     defaultValues: {
       name: "",
@@ -25,6 +26,7 @@ export function CreateGroupDialog() {
     },
     
     onSubmit: async ({ value }) => {
+      
       await createGroup.mutateAsync({
         name: value.name,
         description: value.description,

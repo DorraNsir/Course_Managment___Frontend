@@ -2,17 +2,22 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useGetUserById } from "@/hooks/users/useGetUserById";
 
-interface NavbarProps {
-  role?: "teacher" | "student" | "admin";
-}
 
-export const Navbar = ({ role }: NavbarProps) => {
-  const location = useLocation();
+export const Navbar = () => {
   const navigate = useNavigate();
+  const userId =localStorage.getItem("userId")
+  const role =localStorage.getItem("role")
+  const {data:user}=useGetUserById(userId)
 
   const handleLogout = () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
     navigate("/");
+
   };
 
   return (
@@ -27,12 +32,12 @@ export const Navbar = ({ role }: NavbarProps) => {
           <span className="hidden sm:inline">ITBSCourse</span>
         </Link>
 
-        {role && (
+        {user && (
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline capitalize">
-                {role === "admin" ? "Administrateur" : role === "teacher" ? "Enseignant" : "Étudiant"}
+                {role === "admin" ? "Administrateur" : user.fullName}
               </span>
             </div>
             <Button

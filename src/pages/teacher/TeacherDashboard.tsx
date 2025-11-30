@@ -4,13 +4,15 @@ import { GroupCard } from "@/components/shared/GroupCard";
 import { mockGroups } from "@/lib/mockData";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAssignments } from "@/hooks/assignments/useAssignments";
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
+  const{data:TeahcerGroups}=useAssignments()
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="teacher" />
+      <Navbar />
       <div className="container py-8">
         <Breadcrumb
           items={[

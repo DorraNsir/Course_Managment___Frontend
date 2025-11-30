@@ -1,47 +1,70 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BookOpen } from "lucide-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useLogin } from "@/hooks/Auth/useAuth";
+import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
+import { BookOpen } from "lucide-react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const preselectedRole = searchParams.get("role") as "teacher" | "student" | null;
+  const login = useLogin();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"teacher" | "student">(preselectedRole || "student");
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!email || !password) {
-      toast.error("Veuillez remplir tous les champs");
-      return;
-    }
+    onSubmit: async ({ value }) => {
+      try {
+        const result = await login.mutateAsync({
+          email: value.email,
+          password: value.password,
+        });
+        console.log(result)
+          // Business validation
+        if (!result?.success) {
+          toast.error(result.message || "Erreur de connexion");
+          return;
+        }
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("role", result.role);
+        localStorage.setItem("userId", result.userId);
+        
 
-    toast.success("Connexion réussie !");
-    
-    if (role === "teacher") {
-      navigate("/teacher/dashboard");
-    } else {
-      navigate("/student/dashboard");
-    }
-  };
+        toast.success("Connexion réussie !");
+        if (result.role === "admin") {
+          navigate("/admin/dashboard");
+        } else if (result.role === "teacher") {
+          navigate("/teacher/dashboard");
+        } else if (result.role === "student") {
+          navigate("/student/dashboard");
+        }
+      } catch (error: any) {
+        // Network / server / CORS errors
+        console.error("LOGIN ERROR:", error);
+        const backendMessage =
+          error?.response?.data?.message ||
+          error?.response?.data ||
+          "Erreur lors de la connexion";
+
+        toast.error(backendMessage);
+      }
+    },
+  });
 
   return (
-    <div className="relative  min-h-screen overflow-hidden  flex items-center justify-center p-4">
-    
-    <img
-      src="/bg-waves.svg"
-      alt="wave background"
-      className="absolute bottom-0 left-0 w-full pointer-events-none select-none -z-10"
-    />
+    <div className="relative min-h-screen flex items-center justify-center p-4">
+      <img
+        src="/bg-waves.svg"
+        alt="background waves"
+        className="absolute bottom-0 left-0 w-full -z-10 opacity-80"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -58,58 +81,55 @@ const Login = () => {
         <Card>
           <CardHeader>
             <CardTitle>Connexion</CardTitle>
-            <CardDescription>
-              Connectez-vous à votre espace {role === "teacher" ? "enseignant" : "étudiant"}
-            </CardDescription>
+            <CardDescription>Connectez-vous à votre espace</CardDescription>
           </CardHeader>
+
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label>Rôle</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    type="button"
-                    variant={role === "student" ? "default" : "outline"}
-                    onClick={() => setRole("student")}
-                    className="w-full"
-                  >
-                    Étudiant
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={role === "teacher" ? "default" : "outline"}
-                    onClick={() => setRole("teacher")}
-                    className="w-full"
-                  >
-                    Enseignant
-                  </Button>
-                </div>
-              </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+              className="space-y-4"
+            >
+              {/* Email */}
+              <form.Field
+                name="email"
+                children={(field) => (
+                  <div className="space-y-2">
+                    <Label>Email</Label>
+                    <Input
+                      type="email"
+                      placeholder="exemple@universite.fr"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </div>
+                )}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="exemple@universite.fr"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+              {/* Password */}
+              <form.Field
+                name="password"
+                children={(field) => (
+                  <div className="space-y-2">
+                    <Label>Mot de passe</Label>
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </div>
+                )}
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Mot de passe</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              <Button type="submit" className="w-full">
-                Se connecter
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={login.isPending}
+              >
+                {login.isPending ? "Connexion..." : "Se connecter"}
               </Button>
 
               <Button

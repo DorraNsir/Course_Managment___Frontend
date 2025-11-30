@@ -17,7 +17,7 @@ const CourseDetail = () => {
   if (!course) {
     return (
       <div className="min-h-screen bg-background">
-        <Navbar role="student" />
+        <Navbar />
         <div className="container py-8">
           <p>Cours non trouvé</p>
         </div>
@@ -31,7 +31,7 @@ const CourseDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="student" />
+      <Navbar  />
       <div className="container py-8 max-w-4xl">
         <Breadcrumb
           items={[

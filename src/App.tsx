@@ -17,6 +17,8 @@ import GroupDetails from "./pages/admin/GroupDetails";
 import AssignGroups from "./pages/admin/AssignGroups";
 import NotFound from "./pages/NotFound";
 import MatiereManagement from "./pages/admin/MatiereManagment";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import RoleRoute from "./components/auth/RoleRoute";
 
 const queryClient = new QueryClient();
 
@@ -28,17 +30,17 @@ const App = () => (
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
-        <Route path="/teacher/group/:id" element={<GroupCourses />} />
-        <Route path="/teacher/add-course" element={<AddCourse />} />
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/course/:id" element={<CourseDetail />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<UserManagement />} />
-        <Route path="/admin/groups" element={<GroupManagement />} />
-        <Route path="/admin/groups/:id" element={<GroupDetails />} />
-        <Route path="/admin/matieres" element={<MatiereManagement />} />
-        <Route path="/admin/assign" element={<AssignGroups />} />
+        <Route path="/teacher/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <TeacherDashboard /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/teacher/group/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <GroupCourses /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/teacher/add-course" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <AddCourse /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/student/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["student"]}>  <StudentDashboard /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/student/course/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["student"]}> <CourseDetail /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}>  <AdminDashboard /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}> <UserManagement /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/groups" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}>  <GroupManagement /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/groups/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}>  <GroupDetails /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/matieres" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}> <MatiereManagement /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/admin/assign" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}> <AssignGroups /> </RoleRoute></ProtectedRoute>} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>

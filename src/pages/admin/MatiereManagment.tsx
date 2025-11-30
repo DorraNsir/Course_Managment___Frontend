@@ -23,7 +23,7 @@ const MatiereManagement = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="admin" />
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <Breadcrumb
           items={[

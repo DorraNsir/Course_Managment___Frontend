@@ -22,21 +22,21 @@ const AdminDashboard = () => {
   const stats = [
     {
       title: "Total Utilisateurs",
-      value: users?.length,  
+      value: users?.length||0,  
       icon: Users,
-      description: `${users?.filter(u => u.role === "teacher").length} enseignants, ${users?.filter(u => u.role === "student").length} étudiants`,
+      description: `${users?.filter(u => u.role === "teacher").length||0} enseignants, ${users?.filter(u => u.role === "student").length||0} étudiants`,
       color: "text-blue-600",
     },
     {
       title: "Groupes",
-      value: groups?.length,
+      value: groups?.length||0,
       icon: GraduationCap,
       description: "Groupes actifs",
       color: "text-green-600",
     },
     {
       title: "Matieres",
-      value: matieres?.length,
+      value: matieres?.length||0,
       icon: BookOpen,
       description: "Total des cours",
       color: "text-purple-600",
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="admin" />
+      <Navbar />
       <div className="container mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

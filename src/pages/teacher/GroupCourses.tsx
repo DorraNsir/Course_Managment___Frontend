@@ -29,7 +29,7 @@ const GroupCourses = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar role="teacher" />
+      <Navbar />
       <div className="container py-8">
         <Breadcrumb
           items={[

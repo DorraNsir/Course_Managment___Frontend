@@ -3,9 +3,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const Landing = () => {
   const navigate = useNavigate();
+    useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token) {
+      if (role === "admin") navigate("/admin/dashboard");
+      if (role === "teacher") navigate("/teacher/dashboard");
+      if (role === "student") navigate("/student/dashboard");
+    }
+  }, []);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-background to-muted/30">
