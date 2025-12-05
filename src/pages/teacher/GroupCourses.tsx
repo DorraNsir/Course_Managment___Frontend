@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { Plus, Edit, Trash2, BookOpen } from "lucide-react";
+import { Plus, Edit, Trash2, BookOpen, ClipboardList } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { useCoursesByTeacherAndGroup } from "@/hooks/courses/useGetCoursesByTeacherId";
@@ -95,6 +95,16 @@ const GroupCourses = () => {
                       </div>
                     </div>
                     <div className="flex gap-2">
+                      {course.hasSubmission && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => navigate(`/teacher/course/${course.id}/submissions`)}
+                          title="Voir les remises"
+                        >
+                          <ClipboardList className="h-4 w-4 text-primary" />
+                        </Button>
+                      )}
                       <Button
                         variant="ghost"
                         size="icon"
