@@ -3,6 +3,7 @@ import { BookOpen, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useGetUserById } from "@/hooks/users/useGetUserById";
+import { ThemeToggle } from "./ThemeToggle";
 
 
 export const Navbar = () => {
@@ -12,12 +13,10 @@ export const Navbar = () => {
   const {data:user}=useGetUserById(userId)
 
   const handleLogout = () => {
-
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
     navigate("/");
-
   };
 
   return (
@@ -49,6 +48,7 @@ export const Navbar = () => {
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Déconnexion</span>
             </Button>
+            <ThemeToggle />
           </div>
         )}
       </div>

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { UserCheck, Users } from "lucide-react";
+import { Trash2, UserCheck, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ import { useGroups } from "@/hooks/groups/useGroups";
 import { useMatieres } from "@/hooks/matieres/useMatires";
 import { useCreateAssignment } from "@/hooks/assignments/useCreateAssignment";
 import { useAssignments } from "@/hooks/assignments/useAssignments";
+import { useDeleteAssignments } from "@/hooks/assignments/useDeleteAssignment";
 
 const AssignGroups = () => {
   const {data:teachers}=useUsers()
@@ -24,6 +25,7 @@ const AssignGroups = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
   const [selectedMatiere, setSelectedMatiere] = useState("");
+  const deleteAssgin=useDeleteAssignments()
 const handleAssign = async () => {
   // Validate required fields
   if (!selectedUser || !selectedGroup || !selectedMatiere) {
@@ -80,9 +82,11 @@ const handleAssign = async () => {
     return acc;
   }, {});
 
-  const teachersList = groupedAssignments
-    ? Object.values(groupedAssignments)
-    : [];
+    const handleDeleteAssign = async (Id: string) => {
+    await deleteAssgin.mutateAsync(Id);
+    toast.success("Affectation supprimé avec succès");
+  };
+
 
 
 
@@ -181,37 +185,54 @@ const handleAssign = async () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Affectations Actuelles
-            </CardTitle>
-          </CardHeader>
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <Users className="h-5 w-5" />
+      Affectations Actuelles
+    </CardTitle>
+  </CardHeader>
 
-          <CardContent>
-            <div className="space-y-4">
-              {assignments?.map(a => (
-                <div
-                  key={a.id}
-                  className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h4 className="font-medium">{a.teacherName}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {a.matiereName}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <Badge key={a.id} variant="outline">{a.groupName}</Badge>
-                  </div>
-                </div>
-              ))}
+  <CardContent>
+    <div className="space-y-4">
+      {assignments?.map(a => (
+        <div
+          key={a.id}
+          className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+        >
+          {/* Top Row: Left = info, Right = trash */}
+          <div className="flex justify-between items-center mb-2">
+
+            {/* LEFT SIDE */}
+            <div>
+              <h4 className="font-medium">{a.teacherName}</h4>
+              <p className="text-sm text-muted-foreground">
+                {a.matiereName}
+              </p>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* RIGHT SIDE — TRASH BUTTON */}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 hover:bg-destructive/10"
+              onClick={() => handleDeleteAssign(a.id)}
+            >
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
+
+          </div>
+
+          {/* GROUP BADGES */}
+          <div className="flex flex-wrap gap-2 mt-3">
+            <Badge variant="outline">{a.groupName}</Badge>
+          </div>
+        </div>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+
 
           </motion.div>
         </div>

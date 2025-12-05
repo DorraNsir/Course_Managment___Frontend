@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useGetCourseById } from "@/hooks/courses/useGetCoursesById";
 import { useSubmissionsByCourse } from "@/hooks/submissions/useSubmissionsByCourse";
+import { useGetGroupById } from "@/hooks/groups/useGetGroupById";
 
 interface Submission {
   id: number;
@@ -24,6 +25,7 @@ const CourseSubmissions = () => {
   const [searchTerm, setSearchTerm] = useState("");
   
   const { data: course, isLoading: courseLoading } = useGetCourseById(courseId);
+  const {data : group}=useGetGroupById(Number(course?.groupId))
   const { data: submissions = [], isLoading: submissionsLoading } = useSubmissionsByCourse(courseId);
 
   const filteredSubmissions = submissions.filter((submission: Submission) =>
@@ -65,7 +67,7 @@ const CourseSubmissions = () => {
         <Breadcrumb
           items={[
             { label: "Tableau de bord", href: "/teacher/dashboard" },
-            { label: "Groupe", href: `/teacher/group/${course.groupId}` },
+            { label: `${group.name}_${group.description}`, href: `/teacher/group/${course.groupId}` },
             { label: "Remises" },
           ]}
         />

@@ -25,7 +25,7 @@ const Landing = () => {
       <img
         src="/bg-waves.svg"
         alt="wave background"
-        className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+        className="absolute bottom-0 left-0 w-full pointer-events-none select-none "
       />
 
       {/* MAIN CONTENT */}
