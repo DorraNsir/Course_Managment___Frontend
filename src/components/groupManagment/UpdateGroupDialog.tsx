@@ -18,6 +18,7 @@ export function UpdateGroupDialog({group}) {
 
   const updateGroup = useUpdateGroup();
   const [open, setOpen] = useState(false);
+  
   const form = useForm({
     defaultValues: {
       name:group.name || "",

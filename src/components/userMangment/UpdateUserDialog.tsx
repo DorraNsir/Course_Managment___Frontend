@@ -41,7 +41,6 @@ export function UpdateUserDialog({ groups,user }) {
         data:{
         fullName: value.fullName,
         email: value.email,
-        role: value.role,
         groupId: value.role === "student" ? Number(value.groupId) : null,
         password:value.password,
       }
@@ -112,7 +111,10 @@ export function UpdateUserDialog({ groups,user }) {
             name="password"
             children={(field) => (
               <div className="space-y-1">
+                <div className="flex flex-col">
                 <Label>Mot de passe</Label>
+                <span className="text-xs text-muted-foreground">Laissez vide si vous ne souhaitez pas modifier le mot de passe.</span>
+                </div>
                 <Input
                   type="password"
                   value={field.state.value}
@@ -126,10 +128,15 @@ export function UpdateUserDialog({ groups,user }) {
           {/* Role */}
           <form.Field
             name="role"
+            
             children={(field) => (
               <div className="space-y-1">
+                <div className="flex flex-col ">
                 <Label>Rôle</Label>
+                <span className="text-xs text-muted-foreground">Le rôle d’un utilisateur ne peut pas être modifié !</span>
+                </div>
                 <Select
+                disabled
                       onValueChange={(v) => {
                       field.handleChange(v);
                       setRole(v);

@@ -1,6 +1,7 @@
 export interface Group {
-  id: string;
-  name: string;
+  groupId: string;
+  groupName: string;
+  description:string;
   studentCount: number;
   courseCount: number;
 }
@@ -17,26 +18,7 @@ export interface Course {
   createdAt: string;
 }
 
-export const mockGroups: Group[] = [
-  {
-    id: "1",
-    name: "Groupe A - Licence 3 Informatique",
-    studentCount: 32,
-    courseCount: 8,
-  },
-  {
-    id: "2",
-    name: "Groupe B - Master 1 Réseaux",
-    studentCount: 28,
-    courseCount: 6,
-  },
-  {
-    id: "3",
-    name: "Groupe C - Licence 2 Math-Info",
-    studentCount: 35,
-    courseCount: 7,
-  },
-];
+
 
 export const mockCourses: Course[] = [
   {
@@ -123,14 +105,14 @@ export const mockUsers: User[] = [
     name: "Prof. Ahmed Benali",
     email: "ahmed.benali@itbs.edu",
     role: "teacher",
-    groupIds: ["1", "2"],
+    groupIds: ["7", "2"],
   },
   {
     id: "t2",
     name: "Prof. Fatima Zahra",
     email: "fatima.zahra@itbs.edu",
     role: "teacher",
-    groupIds: ["3"],
+    groupIds: ["7"],
   },
   {
     id: "s1",

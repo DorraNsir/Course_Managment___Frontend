@@ -1,14 +1,30 @@
 import { Navbar } from "@/components/shared/Navbar";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { GroupCard } from "@/components/shared/GroupCard";
-import { mockGroups } from "@/lib/mockData";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAssignments } from "@/hooks/assignments/useAssignments";
 
+
 const TeacherDashboard = () => {
+  
   const navigate = useNavigate();
-  const{data:TeahcerGroups}=useAssignments()
+  const{data:teacherGroupsRaw}=useAssignments()
+  const userId=localStorage.getItem("userId")
+
+  const teacherGroups = Array.from(
+    new Set(
+      teacherGroupsRaw
+        ?.filter(g => g.teacherId === Number(userId))
+        .map(g => JSON.stringify(
+          { 
+            groupId: g.groupId,
+            groupName: g.groupName,
+            description:g.description
+          }
+        ))
+    )
+  ).map(i => JSON.parse(i as string));
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,16 +48,16 @@ const TeacherDashboard = () => {
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockGroups.map((group, index) => (
+          {teacherGroups?.map((group, index) => (
             <motion.div
-              key={group.id}
+              key={group.groupId}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
               <GroupCard
                 group={group}
-                onViewCourses={() => navigate(`/teacher/group/${group.id}`)}
+                onViewCourses={() => navigate(`/teacher/group/${group.groupId}`)}
               />
             </motion.div>
           ))}

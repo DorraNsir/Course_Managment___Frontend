@@ -2,28 +2,35 @@ import { Navbar } from "@/components/shared/Navbar";
 import { Breadcrumb } from "@/components/shared/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { mockGroups, mockCourses } from "@/lib/mockData";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { Plus, Edit, Trash2, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useCoursesByTeacherAndGroup } from "@/hooks/courses/useGetCoursesByTeacherId";
+import { useGetGroupById } from "@/hooks/groups/useGetGroupById";
+import { useDeleteCourse } from "@/hooks/courses/useDeleteCourses";
 
 const GroupCourses = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-  const group = mockGroups.find((g) => g.id === id);
-  const courses = mockCourses.filter((c) => c.groupId === id);
-
+  const groupId =Number(id)
+  const userId =localStorage.getItem("userId")
+  const {data:courses}=useCoursesByTeacherAndGroup(Number(userId),Number(id))
+  const {data:group}=useGetGroupById(groupId)
+  const deleteCourse=useDeleteCourse()
+    
   if (!group) {
     return <div>Groupe non trouvé</div>;
   }
 
-  const handleEdit = (courseId: string) => {
-    toast.info(`Modification du cours ${courseId}`);
+  const handleEdit = (courseId:string) => {
+    navigate(`/teacher/update-course/${courseId }`)
+    
   };
 
-  const handleDelete = (courseId: string) => {
+  const handleDelete =async (courseId: string) => {
+    await deleteCourse.mutateAsync(courseId);
     toast.success(`Cours supprimé avec succès`);
   };
 
@@ -34,7 +41,7 @@ const GroupCourses = () => {
         <Breadcrumb
           items={[
             { label: "Tableau de bord", href: "/teacher/dashboard" },
-            { label: group.name },
+            { label: `${group.name}_${group.description}` },
           ]}
         />
 
@@ -45,12 +52,12 @@ const GroupCourses = () => {
         >
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">{group.name}</h1>
+              {/* <h1 className="text-3xl font-bold mb-2">{group.groupName}</h1> */}
               <p className="text-muted-foreground">
-                {courses.length} cours disponibles
+                {courses?.length} cours disponibles
               </p>
             </div>
-            <Button onClick={() => navigate("/teacher/add-course")} className="gap-2">
+            <Button onClick={() => navigate(`/teacher/add-course/${groupId}`)} className="gap-2">
               <Plus className="h-4 w-4" />
               Ajouter un cours
             </Button>
@@ -58,7 +65,7 @@ const GroupCourses = () => {
         </motion.div>
 
         <div className="space-y-4">
-          {courses.map((course, index) => (
+          {courses?.map((course, index) => (
             <motion.div
               key={course.id}
               initial={{ opacity: 0, x: -20 }}
@@ -79,7 +86,7 @@ const GroupCourses = () => {
                         </p>
                         <div className="flex flex-wrap gap-2 text-sm">
                           <span className="px-2 py-1 bg-secondary rounded text-secondary-foreground">
-                            {course.subject}
+                            {course.matiereName}
                           </span>
                           <span className="px-2 py-1 bg-muted rounded text-muted-foreground">
                             {course.hasSubmission ? "Avec remise" : "Sans remise"}

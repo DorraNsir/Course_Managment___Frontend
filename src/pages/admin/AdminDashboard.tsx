@@ -4,7 +4,6 @@ import { Users, GraduationCap, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { mockGroups, mockCourses, mockUsers } from "@/lib/mockData";
 import { useUsers } from "@/hooks/users/useUsers";
 import { useGroups } from "@/hooks/groups/useGroups";
 import { useMatieres } from "@/hooks/matieres/useMatires";

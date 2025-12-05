@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import MatiereManagement from "./pages/admin/MatiereManagment";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import RoleRoute from "./components/auth/RoleRoute";
+import UpdateCourse from "./pages/teacher/UpdateCourse";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,8 @@ const App = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/teacher/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <TeacherDashboard /> </RoleRoute></ProtectedRoute>} />
         <Route path="/teacher/group/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <GroupCourses /> </RoleRoute></ProtectedRoute>} />
-        <Route path="/teacher/add-course" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <AddCourse /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/teacher/add-course/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <AddCourse /> </RoleRoute></ProtectedRoute>} />
+        <Route path="/teacher/update-course/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["teacher"]}> <UpdateCourse /> </RoleRoute></ProtectedRoute>} />
         <Route path="/student/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["student"]}>  <StudentDashboard /> </RoleRoute></ProtectedRoute>} />
         <Route path="/student/course/:id" element={<ProtectedRoute> <RoleRoute allowedRoles={["student"]}> <CourseDetail /> </RoleRoute></ProtectedRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute> <RoleRoute allowedRoles={["admin"]}>  <AdminDashboard /> </RoleRoute></ProtectedRoute>} />
