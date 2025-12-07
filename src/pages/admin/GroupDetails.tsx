@@ -44,6 +44,7 @@ const GroupDetails = () => {
   });
   
   const teachers = Array.from(teachersMap.values());
+  
   const groupMatieres = matieres?.filter(m => 
     groupAssignments.some(a => a.matiereId === m.id)
   ) || [];

@@ -8,11 +8,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Download, Calendar, User, FileText, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { useGetCourseById } from "@/hooks/courses/useGetCoursesById";
 
 const CourseDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const course = mockCourses.find((c) => c.id === id);
+  const navigate = useNavigate()
+  const {data: course}=useGetCourseById(Number(id))
+  console.log(course)
+
 
   if (!course) {
     return (
@@ -52,7 +55,7 @@ const CourseDetail = () => {
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <BookOpen className="h-6 w-6 text-primary" />
                     </div>
-                    <Badge variant="secondary">{course.subject}</Badge>
+                    <Badge variant="secondary">{course.matiereName}</Badge>
                   </div>
                   <CardTitle className="text-2xl mb-2">{course.title}</CardTitle>
                 </div>
@@ -69,16 +72,16 @@ const CourseDetail = () => {
                   <User className="h-5 w-5 text-primary" />
                   <div>
                     <p className="text-sm text-muted-foreground">Enseignant</p>
-                    <p className="font-medium">{course.teacher}</p>
+                    <p className="font-medium">{course.teacherName}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
                   <Calendar className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Date de publication</p>
+                    <p className="text-sm text-muted-foreground">Date limite de remise</p>
                     <p className="font-medium">
-                      {new Date(course.createdAt).toLocaleDateString("fr-FR")}
+                      {course.deadline||"pas de date limite"}
                     </p>
                   </div>
                 </div>

@@ -29,34 +29,33 @@ export const CourseCard = ({
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1">
               <h3 className="font-semibold text-lg mb-2">{course.title}</h3>
-              <Badge variant="secondary" className="mb-2">
-                {course.subject}
-              </Badge>
             </div>
             <BookOpen className="h-5 w-5 text-primary flex-shrink-0" />
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+          <p className="text-sm text-muted-foreground mb-4 line-clamp-1">
             {course.description}
           </p>
           <div className="space-y-2 text-sm">
             {showTeacher && (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <User className="h-4 w-4" />
-                <span>{course.teacher}</span>
+                <span>{course.teacherName}</span>
               </div>
             )}
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>{new Date(course.createdAt).toLocaleDateString("fr-FR")}</span>
+              <span>{course.deadline|| "Pas de date limite"}</span>
             </div>
-            {course.hasSubmission && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <FileText className="h-4 w-4" />
-                <span>Avec remise de travail</span>
-              </div>
-            )}
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <FileText className="h-4 w-4" />
+              <span>
+                {course.hasSubmission
+                  ? "Avec remise de travail"
+                  : "Sans remise de travail"}
+              </span>
+            </div>
           </div>
         </CardContent>
         {onAction && (

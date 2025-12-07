@@ -29,7 +29,6 @@ const AddCourse = () => {
   const groupId = Number(id);
   const createCourse = useCreateCourse();
   const {data:group}=useGetGroupById(groupId)
-
   const { data: assignments } = useAssignments();
   const userId = Number(localStorage.getItem("userId"));
   const [hasSubmission, setHasSubmission] = useState(false);
