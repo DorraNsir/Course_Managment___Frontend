@@ -17,41 +17,38 @@ const navigate = useNavigate();
   const user = users?.find(u => u.id === userId);
   const groupId = user?.groupId;
   const{data:assignments}=useAssignments()
-// 1️⃣ All assignments for this group
-const groupAssignments = assignments?.filter(a => a.groupId === groupId) || [];
+  // 1️⃣ All assignments for this group
+  const groupAssignments = assignments?.filter(a => a.groupId === groupId) || [];
 
-// 2️⃣ Unique matieres from assignments
-const matieresInGroup = Array.from(
-  new Map(
-    groupAssignments.map(a => [
-      a.matiereId,
-      { matiereId: a.matiereId, matiereName: a.matiereName }
-    ])
-  ).values()
-)as Array<{ matiereId: number; matiereName: string }>;
+  // 2️⃣ Unique matieres from assignments
+  const matieresInGroup = Array.from(
+    new Map(
+      groupAssignments.map(a => [
+        a.matiereId,
+        { matiereId: a.matiereId, matiereName: a.matiereName }
+      ])
+    ).values()
+  )as Array<{ matiereId: number; matiereName: string }>;
 
-// 3️⃣ Courses of the student group
-const studentCourses = courses?.filter(c => c.groupId === groupId) || [];
+  // 3️⃣ Courses of the student group
+  const studentCourses = courses?.filter(c => c.groupId === groupId) || [];
 
-// 4️⃣ Build the final grouped list
-const coursesBySubject = matieresInGroup.map(m => ({
-  subjectId: m.matiereId,
-  subjectName: m.matiereName,
-  courses: studentCourses.filter(c => c.matiereId === m.matiereId)
-}));
-
-
-
+  // 4️⃣ Build the final grouped list
+  const coursesBySubject = matieresInGroup.map(m => ({
+    subjectId: m.matiereId,
+    subjectName: m.matiereName,
+    courses: studentCourses.filter(c => c.matiereId === m.matiereId)
+  }));
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container py-8">
-        <Breadcrumb
+        {/* <Breadcrumb
           items={[
             { label: "Mes cours" },
           ]}
-        />
+        /> */}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

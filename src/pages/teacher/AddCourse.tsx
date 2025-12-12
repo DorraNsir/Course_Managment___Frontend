@@ -22,6 +22,7 @@ import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { useGetGroupById } from "@/hooks/groups/useGetGroupById";
 import { useCreateCourse } from "@/hooks/courses/useCreateCourses";
+import { api } from "@/api/axiosInstance";
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -32,6 +33,8 @@ const AddCourse = () => {
   const { data: assignments } = useAssignments();
   const userId = Number(localStorage.getItem("userId"));
   const [hasSubmission, setHasSubmission] = useState(false);
+    // For file name storing
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Get all matieres this teacher teaches in this group
   const teacherMatieresInGroup =
@@ -39,8 +42,16 @@ const AddCourse = () => {
       ?.filter((a) => a.groupId === groupId && a.teacherId === userId)
       .map((a) => ({ id: a.matiereId, name: a.matiereName })) || [];
 
-  // For file name storing
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const uploadFile = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await api.post("/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" }
+  });
+
+    return res.data.filePath; // /files/courses/xxx.pdf
+  };
 
   // FORM SETUP
   const form = useForm({
@@ -65,6 +76,11 @@ const AddCourse = () => {
           }
         }
 
+        let uploadedPath = null;
+        if (selectedFile) {
+          uploadedPath = await uploadFile(selectedFile);
+        }
+
         await createCourse.mutateAsync({
           title: value.title,
           description: value.description,
@@ -73,7 +89,7 @@ const AddCourse = () => {
           groupId: groupId,
           hasSubmission: value.hasSubmission ,
           deadline: value.hasSubmission ? value.deadline : null,
-          filePath: selectedFile ? selectedFile.name : null,
+          filePath: uploadedPath || null,
         });
 
         toast.success("Cours créé avec succès !");

@@ -7,3 +7,4 @@ export const useSubmissionsByCourse = (courseId: string | number | undefined) =>
     queryFn: () => submissionsApi.getByCourse(courseId!),
     enabled: !!courseId,
   });
+

@@ -22,6 +22,7 @@ import { useAssignments } from "@/hooks/assignments/useAssignments";
 import { useGetGroupById } from "@/hooks/groups/useGetGroupById";
 import { useGetCourseById } from "@/hooks/courses/useGetCoursesById";
 import { useUpdateCourse } from "@/hooks/courses/useUpdateCourses";
+import { api } from "@/api/axiosInstance";
 
 const UpdateCourse = () => {
   const navigate = useNavigate();
@@ -39,6 +40,17 @@ const UpdateCourse = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [hasSubmission, setHasSubmission] = useState(false);
+
+    const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    const res = await api.post("/upload", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+  
+      return res.data.filePath; // /files/courses/xxx.pdf
+    };
 
   // FORM
   const form = useForm({
@@ -63,6 +75,11 @@ const UpdateCourse = () => {
           }
         }
 
+        let uploadedPath = null;
+        if (selectedFile) {
+          uploadedPath = await uploadFile(selectedFile);
+        }
+
         const result =await updateCourse.mutateAsync({
           id: courseId,
           data: {
@@ -71,7 +88,7 @@ const UpdateCourse = () => {
             hasSubmission: value.hasSubmission,
             matiereId: Number(value.matiereId),
             deadline: value.hasSubmission ? value.deadline : null,
-            filePath: selectedFile ? selectedFile.name : course.filePath,
+            filePath:  uploadedPath || null,
           },
         });
         toast.success("Cours modifié avec succès !");

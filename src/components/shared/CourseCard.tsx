@@ -46,7 +46,8 @@ export const CourseCard = ({
             )}
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>{course.deadline|| "Pas de date limite"}</span>
+             <span>{course?.deadline?.split("T")[0] ?? "Pas de date limite"}</span>
+
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <FileText className="h-4 w-4" />

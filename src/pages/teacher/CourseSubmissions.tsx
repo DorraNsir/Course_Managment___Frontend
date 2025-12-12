@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useGetCourseById } from "@/hooks/courses/useGetCoursesById";
 import { useSubmissionsByCourse } from "@/hooks/submissions/useSubmissionsByCourse";
 import { useGetGroupById } from "@/hooks/groups/useGetGroupById";
+import { useUsers } from "@/hooks/users/useUsers";
 
 interface Submission {
   id: number;
@@ -23,18 +24,29 @@ interface Submission {
 const CourseSubmissions = () => {
   const { courseId } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const { data: users } = useUsers();
   const { data: course, isLoading: courseLoading } = useGetCourseById(courseId);
   const {data : group}=useGetGroupById(Number(course?.groupId))
+  const students = users?.filter(u => u.groupId === course?.groupId && u.role === "student") || [];
+console.log("students", students);
   const { data: submissions = [], isLoading: submissionsLoading } = useSubmissionsByCourse(courseId);
+  console.log("submissions", submissions);
+
+  const isMissing = course?.hasSubmission && course?.deadline ? new Date(course?.deadline) < new Date() : false;
 
   const filteredSubmissions = submissions.filter((submission: Submission) =>
     submission.studentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     submission.studentEmail?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const submittedCount = submissions.filter((s: Submission) => s.submittedAt).length;
-  const pendingCount = submissions.length - submittedCount;
+  const submittedCount = submissions?.length;
+  const pendingCount = students?.length - submittedCount;
+
+  // 4. Students who have NOT submitted
+  const submittedIds = submissions.map(sub => sub.studentId);
+  const missingStudents = students.filter(s => !submittedIds.includes(s.id));
+
+  console.log("missingStudents", missingStudents);
 
   if (courseLoading) {
     return (
@@ -67,7 +79,7 @@ const CourseSubmissions = () => {
         <Breadcrumb
           items={[
             { label: "Tableau de bord", href: "/teacher/dashboard" },
-            { label: `${group.name}_${group.description}`, href: `/teacher/group/${course.groupId}` },
+            { label: `${group?.name}_${group?.description}`, href: `/teacher/group/${course?.groupId}` },
             { label: "Remises" },
           ]}
         />
@@ -82,20 +94,20 @@ const CourseSubmissions = () => {
             <CardHeader>
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <CardTitle className="text-2xl mb-2">{course.title}</CardTitle>
-                  <p className="text-muted-foreground">{course.description}</p>
+                  <CardTitle className="text-2xl mb-2">{course?.title}</CardTitle>
+                  <p className="text-muted-foreground">{course?.description}</p>
                 </div>
                 <div className="flex flex-wrap gap-4">
                   {course.deadline && (
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>Date limite: {new Date(course.deadline).toLocaleDateString('fr-FR')}</span>
+                      <span>Date limite: {new Date(course?.deadline).toLocaleDateString('fr-FR')}</span>
                     </div>
                   )}
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                  {/* <Badge variant="secondary" className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
                     {submissions.length} étudiants
-                  </Badge>
+                  </Badge> */}
                 </div>
               </div>
             </CardHeader>
@@ -116,7 +128,7 @@ const CourseSubmissions = () => {
                   <Users className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{submissions.length}</p>
+                  <p className="text-2xl font-bold">{students?.length}</p>
                   <p className="text-sm text-muted-foreground">Total étudiants</p>
                 </div>
               </div>
@@ -143,7 +155,7 @@ const CourseSubmissions = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{pendingCount}</p>
-                  <p className="text-sm text-muted-foreground">En attente</p>
+                  <p className="text-sm text-muted-foreground">{isMissing?"Manqaunte":"En attente"}</p>
                 </div>
               </div>
             </CardContent>
@@ -186,13 +198,13 @@ const CourseSubmissions = () => {
                 <div className="flex items-center justify-center py-8">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
                 </div>
-              ) : filteredSubmissions.length === 0 ? (
+              ) : filteredSubmissions?.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">
                   {searchTerm ? "Aucun étudiant trouvé" : "Aucune remise pour ce cours"}
                 </p>
               ) : (
                 <div className="space-y-3">
-                  {filteredSubmissions.map((submission: Submission, index: number) => (
+                  {filteredSubmissions?.map((submission: Submission, index: number) => (
                     <motion.div
                       key={submission.id}
                       initial={{ opacity: 0, x: -20 }}
@@ -207,15 +219,15 @@ const CourseSubmissions = () => {
                           </span>
                         </div>
                         <div>
-                          <p className="font-medium">{submission.studentName}</p>
-                          <p className="text-sm text-muted-foreground">{submission.studentEmail}</p>
+                          <p className="font-medium">{submission?.studentName}</p>
+                          <p className="text-sm text-muted-foreground">{submission?.studentEmail}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        {submission.submittedAt ? (
+                        {submission?.submittedAt &&
                           <>
                             <span className="text-sm text-muted-foreground hidden sm:inline">
-                              {new Date(submission.submittedAt).toLocaleDateString('fr-FR', {
+                              {new Date(submission?.submittedAt).toLocaleDateString('fr-FR', {
                                 day: 'numeric',
                                 month: 'short',
                                 hour: '2-digit',
@@ -227,12 +239,23 @@ const CourseSubmissions = () => {
                               Remis
                             </Badge>
                           </>
-                        ) : (
+                        }
+                        {/* {missingStudents &&
+                          <>
+                            <span className="text-sm text-muted-foreground hidden sm:inline">
+                              {new Date(submission?.submittedAt).toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
                           <Badge variant="secondary" className="bg-orange-500/10 text-orange-600 hover:bg-orange-500/20">
                             <XCircle className="h-3 w-3 mr-1" />
                             En attente
                           </Badge>
-                        )}
+                          </>
+                        } */}
                       </div>
                     </motion.div>
                   ))}

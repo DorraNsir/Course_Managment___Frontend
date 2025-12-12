@@ -44,7 +44,7 @@ const GroupDetails = () => {
   });
   
   const teachers = Array.from(teachersMap.values());
-  
+
   const groupMatieres = matieres?.filter(m => 
     groupAssignments.some(a => a.matiereId === m.id)
   ) || [];
@@ -73,7 +73,7 @@ const GroupDetails = () => {
           items={[
             { label: "Admin", href: "/admin/dashboard" },
             { label: "Gestion des Groupes", href: "/admin/groups" },
-            { label: group.name },
+            { label: `${group.name}_${group.description}` },
           ]}
         />
 
@@ -85,10 +85,10 @@ const GroupDetails = () => {
         >
           <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
             <CardHeader>
-              <CardTitle className="text-3xl">{group.name}</CardTitle>
-              {group.description && (
+              <CardTitle className="text-3xl">{group.name}_{group.description}</CardTitle>
+              {/* {group.description && (
                 <p className="text-muted-foreground mt-2">{group.description}</p>
-              )}
+              )} */}
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
